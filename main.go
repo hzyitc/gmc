@@ -39,7 +39,7 @@ func main() {
 		log.Info("new connection", local.RemoteAddr().String())
 
 		remote, err := func() (net.Conn, error) {
-			if service != "" {
+			if args[0] != "udp" && service != "" {
 				remote, err := net.Dial(args[0], service)
 				if err == nil {
 					return remote, nil
