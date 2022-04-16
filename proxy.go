@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/hzyitc/mnh/log"
+	"github.com/hzyitc/netutils"
 )
 
 type ConnectFunc func(local net.Conn) (net.Conn, error)
@@ -65,6 +66,17 @@ func Proxy(listener net.Listener, connectFunc ConnectFunc) error {
 func TCPProxy(port int, connectFunc ConnectFunc) error {
 	local := "0.0.0.0:" + strconv.Itoa(port)
 	listener, err := net.Listen("tcp", local)
+	if err != nil {
+		return err
+	}
+
+	defer listener.Close()
+	return Proxy(listener, connectFunc)
+}
+
+func UDPProxy(port int, connectFunc ConnectFunc) error {
+	local := "0.0.0.0:" + strconv.Itoa(port)
+	listener, err := netutils.NewUDP("udp", local)
 	if err != nil {
 		return err
 	}
