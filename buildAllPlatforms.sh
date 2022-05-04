@@ -4,7 +4,7 @@ OUTPUT="bin/"
 PROGRAM="gmc"
 LDFLAGS="-s -w"
 
-ver="$(git describe --tags --match "v*" --dirty "" 2>/dev/null || git log -1 --pretty=format:"v0.0.0-%h" 2>/dev/null || echo "v0.0.0")"
+ver="$(git describe --tags --match "v*" --dirty="" 2>/dev/null || git log -1 --pretty=format:"v0.0.0-%h" 2>/dev/null || echo "v0.0.0")"
 [ -n "$(git status --porcelain |& grep -Ev '^\?\?')" ] && ver="$ver-$(date +"%Y%M%d-%H%m%S")"
 LDFLAGS="$LDFLAGS -X main.version=$ver"
 
@@ -32,7 +32,7 @@ for i in "${platforms[@]}"; do
 	mips="$(echo "$i" | awk -F/ '{print $3}')"
 
 	[ "$os" == "windows" ] && ext="exe"
-	
+
 	filename="${OUTPUT}/${PROGRAM}_${ver}_${os}_${arch}${ext:+.$ext}"
 	echo "build $filename for $i"
 	CGO_ENABLED=0 GOOS="${os}" GOARCH="${arch}" GOMIPS="${mips}" \
