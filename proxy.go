@@ -44,8 +44,9 @@ func Proxy(listener net.Listener, connectFunc ConnectFunc) error {
 
 		remote, err := connectFunc(local)
 		if err != nil {
+			log.Info(local.RemoteAddr().String() + ": Fail to connect remote: " + err.Error())
 			local.Close()
-			return err
+			continue
 		}
 
 		if remote != nil {
